@@ -1,0 +1,10 @@
+{
+    "databases": [
+        {
+            "name": "Localhost",
+            "host": "localhost",
+            "user": "root",
+            "database": "test"
+        }
+    ]
+}
