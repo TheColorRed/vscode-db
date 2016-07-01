@@ -1,1 +1,1 @@
-select * from table;
+select * from posts.postId;

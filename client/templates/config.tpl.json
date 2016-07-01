@@ -5,7 +5,7 @@
             "connection": {
                 "host": "localhost",
                 "user": "root",
-                "password": "afrid123",
+                "password": "",
                 "database": "test"
             }
         }
