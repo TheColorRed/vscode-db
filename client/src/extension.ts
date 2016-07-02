@@ -4,38 +4,60 @@
  * ------------------------------------------------------------------------------------------ */
 'use strict';
 
-import { window, workspace, languages, commands, Disposable, ExtensionContext, Uri } from 'vscode';
+import {
+	window, workspace, languages, commands,
+	Disposable, ExtensionContext, Uri, StatusBarItem, StatusBarAlignment
+} from 'vscode';
 
 import { SQLCompletionItemProvider } from './providers/CompletionItemProvider';
 import { db, Database } from './Database';
 
 const fs = require('fs');
 
+let statusBarItem: StatusBarItem = window.createStatusBarItem(StatusBarAlignment.Left);
+
 export function activate(context: ExtensionContext) {
+
 
     context.subscriptions.push(commands.registerCommand('db.connect', () => {
 		getConnections().then(dbnames => {
 			window.showQuickPick(dbnames).then(value => {
-				console.log(`Picked ${value}`);
+				db.connect(value);
 			});
 		});
     }));
 
-	context.subscriptions.push(languages.registerCompletionItemProvider('sql', new SQLCompletionItemProvider()))
+	context.subscriptions.push(commands.registerCommand('db.use', () => {
+		// db.g().then(dbnames => {
+			changeDatabase();
+		// });
+	}));
 
-	workspace.onDidOpenTextDocument(document => {
-		// window.showTextDocument(document);
-	});
+	context.subscriptions.push(languages.registerCompletionItemProvider('sql', new SQLCompletionItemProvider()))
 
 	getConnections().then(dbnames => {
 		if (db.connectionLength == 1) {
-			db.build(dbnames[0]);
+			db.build(dbnames[0]).then(done => {
+				changeDatabase();
+			});
 		}
-		// dbnames.forEach(dbname => {
-		// 	// console.log(databases[dbname]);
-		// });
 	}).catch(error => {
 		console.log(error);
+	});
+}
+
+function changeDatabase() {
+	window.showQuickPick(db.getDbNames()).then(selected => {
+		db.useDatabase(selected).then(changed => {
+			statusBarItem.text = `$(database) ${db.connectionName} > ${selected}`;
+			statusBarItem.show();
+		});
+	});
+}
+
+function getConnectionDatabases(): Thenable<string[]> {
+	return new Promise(resolve => {
+		// db.get
 	});
 }
 

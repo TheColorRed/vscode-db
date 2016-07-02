@@ -23,7 +23,11 @@
     "commands": [
       {
         "command": "db.connect",
-        "title": "Connect to a database"
+        "title": "Sapphire - Connect to a server"
+      },
+      {
+        "command": "db.use",
+        "title": "Sapphire - Use database"
       }
     ]
   },
@@ -37,6 +41,8 @@
     "vscode": "^0.11.0"
   },
   "dependencies": {
-    "mysql": "^2.11.1"
+    "mysql": "^2.11.1",
+    "node-sql-parser": "0.0.1",
+    "node-sqlparser": "^1.0.2"
   }
 }
